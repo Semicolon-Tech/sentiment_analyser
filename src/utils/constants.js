@@ -1,1 +1,1 @@
-export const baseUrl = "https://sentiment-analyser-flask.herokuapp.com"
+export const baseUrl = process.env.REACT_APP_API_URL

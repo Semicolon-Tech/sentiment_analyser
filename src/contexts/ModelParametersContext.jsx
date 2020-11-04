@@ -1,18 +1,13 @@
 import React, {createContext, useState} from "react";
 
-const initialModelParameters = {
-    "text": "do no evil",
-    "model": "categorical",
-    "vectorizer": "count"
-}
-
-export const ModelParametersContext = createContext([
-    initialModelParameters,
-    (modelParameters) => {}
-]);
+export const ModelParametersContext = createContext();
 
 export const ModelParametersProvider = props => {
-    const [modelParameters, setModelParameters] = useState(initialModelParameters)
+    const [modelParameters, setModelParameters] = useState({
+        "text": "do no evil",
+        "model": "categorical",
+        "vectorizer": "count"
+    })
 
     return (
         <ModelParametersContext.Provider value={[modelParameters, setModelParameters]}>

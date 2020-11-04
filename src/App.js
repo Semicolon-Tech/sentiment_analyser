@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, {useContext, useState} from "react";
 
 import Box from "@material-ui/core/Box";
 import  {Search} from "@material-ui/icons";
@@ -16,19 +16,26 @@ import {ModelParametersContext, ModelParametersProvider} from "./contexts/ModelP
 
 function App() {
     const classes = useStyles();
+    const [bgColor, setBgColor] = useState(classes.neutral);
+    const [predictedText, setPredictedText] = useState("...");
     const [modelParameters, setModelParameters] = useContext(ModelParametersContext)
 
-    const handlePredict = (responseData) => {
-        console.log(responseData);
+    const bgColors = {
+        "positive": classes.positive,
+        "negative": classes.negative,
+        "neutral": classes.neutral
+    }
+
+    const handlePrediction = (responseData) => {
+        setPredictedText(modelParameters["text"])
+        setBgColor(bgColors[responseData["output"]]);
     }
 
     const flaskPredict = async () => {
-        console.log(modelParameters);
+        console.log(JSON.stringify(modelParameters));
         const response = await fetch(`${baseUrl}/predict`,
             {
                 method:"POST",
-                mode: 'no-cors',
-                // credentials: 'same-origin', // include, *same-origin, omit
                 headers: {
                   'Content-Type': 'application/json'
                 },
@@ -42,18 +49,24 @@ function App() {
 
     const handleSubmit = event => {
         event.preventDefault();
+        setPredictedText("... Loading ...");
+        setBgColor(classes.neutral);
+
+        flaskPredict().then(responseData => {
+            handlePrediction(responseData);
+        });
+    };
+
+    const handleChange = event => {
         setModelParameters({
             ...modelParameters,
             "text": event.target.value
         })
 
-        flaskPredict().then(responseData => {
-            handlePredict(responseData);
-        });
     };
 
     return (
-        <ModelParametersProvider>
+        // <ModelParametersProvider>
             <Box className={classes.root}>
                 <Box className={classes.box}>
                     <Typography variant="h4" align="center" component="h1" gutterBottom>
@@ -69,23 +82,27 @@ function App() {
                           <TextField
                               id="outlined-search"
                               InputProps={{
-                                  endAdornment: <InputAdornment position="start">
+                                  endAdornment: <InputAdornment position="start" onClick={handleSubmit}>
                                       <Search className={classes.btn} fontSize="default" />
                                   </InputAdornment>,
                               }}
-                              value={modelParameters["text"]}
+                              defaultValue={modelParameters["text"]}
                               className={classes.input}
                               label="Search field"
                               type="search"
-                              onFocus={handleSubmit}
+                              required={true}
+                              onChange={handleChange}
                               variant="outlined" />
+                        </Box>
+                        <Box className={`${classes.predicted} ${bgColor}`}>
+                            {predictedText}
                         </Box>
                   </form>
               <ProTip />
               <Copyright />
               </Box>
             </Box>
-        </ModelParametersProvider>
+        //</ModelParametersProvider>
         );
 }
 
