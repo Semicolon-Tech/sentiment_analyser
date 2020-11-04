@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: "grey"
     },
     negative: {
-        backgroundColor: "red"
+        backgroundColor: "#F32013"
     },
     positive: {
         backgroundColor: "aqua"

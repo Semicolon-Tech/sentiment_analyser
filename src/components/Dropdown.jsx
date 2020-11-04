@@ -39,10 +39,6 @@ function Dropdown({name, options}) {
                 value={modelParameters[name]}
                 onChange={handleChange}
             >
-                <MenuItem value="">
-                    <em>None</em>
-                </MenuItem>
-
                 {Object.keys(options).map(
                     key => (
                         <MenuItem key={key} value={options[key]}>{key}</MenuItem>
