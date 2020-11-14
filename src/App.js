@@ -12,7 +12,7 @@ import ModelOptions from "./components/ModelOptions";
 
 import {baseUrl} from "./utils/constants";
 import useStyles from "./style/style";
-import {ModelParametersContext, ModelParametersProvider} from "./contexts/ModelParametersContext";
+import {ModelParametersContext} from "./contexts/ModelParametersContext";
 
 function App() {
     const classes = useStyles();
@@ -66,43 +66,41 @@ function App() {
     };
 
     return (
-        // <ModelParametersProvider>
-            <Box className={classes.root}>
-                <Box className={classes.box}>
-                    <Typography variant="h4" align="center" component="h1" gutterBottom>
-                      Create React App v4-beta example
-                    </Typography>
+        <Box className={classes.root}>
+            <Box className={classes.box}>
+                <Typography variant="h4" align="center" component="h1" gutterBottom>
+                  Create React App v4-beta example
+                </Typography>
 
-                    <form noValidate autoComplete="off">
-                        <Box className={classes.form}>
-                            <ModelOptions />
-                        </Box>
+                <form noValidate autoComplete="off">
+                    <Box className={classes.form}>
+                        <ModelOptions />
+                    </Box>
 
-                        <Box className={classes.form}>
-                          <TextField
-                              id="outlined-search"
-                              InputProps={{
-                                  endAdornment: <InputAdornment position="start" onClick={handleSubmit}>
-                                      <Search className={classes.btn} fontSize="default" />
-                                  </InputAdornment>,
-                              }}
-                              defaultValue={modelParameters["text"]}
-                              className={classes.input}
-                              label="Search field"
-                              type="search"
-                              required={true}
-                              onChange={handleChange}
-                              variant="outlined" />
-                        </Box>
-                        <Box className={`${classes.predicted} ${bgColor}`}>
-                            {predictedText}
-                        </Box>
-                  </form>
-              <ProTip />
-              <Copyright />
-              </Box>
-            </Box>
-        //</ModelParametersProvider>
+                    <Box className={classes.form}>
+                      <TextField
+                          id="outlined-search"
+                          InputProps={{
+                              endAdornment: <InputAdornment position="start" onClick={handleSubmit}>
+                                  <Search className={classes.btn} fontSize="default" />
+                              </InputAdornment>,
+                          }}
+                          defaultValue={modelParameters["text"]}
+                          className={classes.input}
+                          label="Search field"
+                          type="search"
+                          required={true}
+                          onChange={handleChange}
+                          variant="outlined" />
+                    </Box>
+                    <Box className={`${classes.predicted} ${bgColor}`}>
+                        {predictedText}
+                    </Box>
+              </form>
+          <ProTip />
+          <Copyright />
+          </Box>
+        </Box>
         );
 }
 
