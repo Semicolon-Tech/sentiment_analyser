@@ -37,7 +37,8 @@ function App() {
             {
                 method:"POST",
                 headers: {
-                  'Content-Type': 'application/json'
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*"
                 },
                 body: JSON.stringify(modelParameters)
             }
@@ -71,7 +72,12 @@ function App() {
         setBgColor(classes.neutral);
 
         // ping server
-        fetch(`${baseUrl}/ping`).then(r => {
+        fetch(`${baseUrl}/ping`, {
+            method:"GET",
+            headers: {
+              "Access-Control-Allow-Origin": "*"
+            },
+        }).then(r => {
             console.log(r);
             if(r.status === 200) {
                 setPredictedText("... Server Ready to Go! ...");
