@@ -1,4 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
+import axios from "axios";
 
 import Box from "@material-ui/core/Box";
 import  {Search} from "@material-ui/icons";
@@ -33,18 +34,13 @@ function App() {
 
     const predict = async () => {
         console.log(JSON.stringify(modelParameters));
-        const response = await fetch(`${baseUrl}/predict`,
-            {
-                method:"POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "*"
-                },
-                body: JSON.stringify(modelParameters)
-            }
-        );
+        const response = await axios({
+            method: 'post',
+            url: `${baseUrl}/predict`,
+            data: modelParameters
+        });
 
-        const responseData = await response.json();
+        const responseData = await response.data;
         return responseData;
     }
 
@@ -72,11 +68,9 @@ function App() {
         setBgColor(classes.neutral);
 
         // ping server
-        fetch(`${baseUrl}/ping`, {
-            method:"GET",
-            headers: {
-              "Access-Control-Allow-Origin": "*"
-            },
+        axios({
+            method: 'get',
+            url: `${baseUrl}/ping`,
         }).then(r => {
             console.log(r);
             if(r.status === 200) {
