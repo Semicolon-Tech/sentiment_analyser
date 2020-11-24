@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 
 import Box from "@material-ui/core/Box";
 import  {Search} from "@material-ui/icons";
@@ -8,7 +8,6 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 
 import ProTip from "./components/ProTip";
 import Copyright from "./components/Copyright";
-import ModelOptions from "./components/ModelOptions";
 
 import {baseUrl} from "./utils/constants";
 import useStyles from "./style/style";
@@ -19,6 +18,7 @@ function App() {
     const [bgColor, setBgColor] = useState(classes.neutral);
     const [predictedText, setPredictedText] = useState("...");
     const [modelParameters, setModelParameters] = useContext(ModelParametersContext)
+    const [serverStatus, setServerStatus] = useState(false)
 
     const bgColors = {
         "positive": classes.positive,
@@ -31,7 +31,7 @@ function App() {
         setBgColor(bgColors[responseData["output"]]);
     }
 
-    const flaskPredict = async () => {
+    const predict = async () => {
         console.log(JSON.stringify(modelParameters));
         const response = await fetch(`${baseUrl}/predict`,
             {
@@ -52,7 +52,7 @@ function App() {
         setPredictedText("... Loading ...");
         setBgColor(classes.neutral);
 
-        flaskPredict().then(responseData => {
+        predict().then(responseData => {
             handlePrediction(responseData);
         });
     };
@@ -65,30 +65,52 @@ function App() {
 
     };
 
+    // on component mount
+    useEffect(() => {
+        setPredictedText("... Testing server with a ping ...");
+        setBgColor(classes.neutral);
+
+        // ping server
+        fetch(`${baseUrl}/ping`).then(r => {
+            console.log(r);
+            if(r.status === 200) {
+                setPredictedText("... Server Ready to Go! ...");
+                setBgColor(classes.positive);
+                setServerStatus(true);
+
+            }else{
+                setPredictedText("... Server unavailable! Refresh page to Try again! ...");
+                setBgColor(classes.negative);
+                setServerStatus(false);
+            }
+        }).catch(e => {
+            setPredictedText("... Server unavailable! Refresh page to Try again! ...");
+            setBgColor(classes.negative);
+            setServerStatus(false);
+        });
+    }, [classes.neutral, classes.negative, classes.positive]);
+
     return (
         <Box className={classes.root}>
             <Box className={classes.box}>
                 <Typography variant="h4" align="center" component="h1" gutterBottom>
-                  Create React App v4-beta example
+                  Sentiment Analyser
                 </Typography>
 
                 <form noValidate autoComplete="off">
                     <Box className={classes.form}>
-                        <ModelOptions />
-                    </Box>
-
-                    <Box className={classes.form}>
                       <TextField
                           id="outlined-search"
-                          InputProps={{
+                          InputProps={(serverStatus)? {
                               endAdornment: <InputAdornment position="start" onClick={handleSubmit}>
-                                  <Search className={classes.btn} fontSize="default" />
+                                  <Search className={classes.btn} fontSize="default"  />
                               </InputAdornment>,
-                          }}
+                          } : {}}
                           defaultValue={modelParameters["text"]}
                           className={classes.input}
                           label="Search field"
                           type="search"
+                          disabled={!serverStatus}
                           required={true}
                           onChange={handleChange}
                           variant="outlined" />

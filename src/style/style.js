@@ -3,28 +3,29 @@ import {makeStyles} from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
-        margin: 'auto'
+        margin: '0px',
+        padding: '0px'
     },
     neutral: {
         backgroundColor: "grey"
     },
     negative: {
-        backgroundColor: "#F32013"
+        backgroundColor: "red"
     },
     positive: {
-        backgroundColor: "aqua"
+        backgroundColor: "green"
     },
     predicted: {
         width: '100%',
         margin: '0%',
-        color: "black",
+        color: "white",
         textAlign: "center",
         padding: "3px",
         borderRadius: "3px"
     },
     box: {
         width: '75%',
-        margin: '10% auto',
+        margin: '15% auto auto auto',
     },
     btn: {
       cursor: 'pointer',
